@@ -1,0 +1,11 @@
+{
+  "app": [
+    {
+      "name": "ebsai",
+      "script": "suggest.js",
+      "watch": "/",
+      "exec_mode": "cluster",
+      "instance": 1
+    }
+  ]
+}
