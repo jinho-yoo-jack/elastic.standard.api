@@ -5,11 +5,11 @@ const path = require('path');
 const uuidv4   = require('uuid/v4');
 
 const Util = require(`${APPROOT}/util/util.js`);
-const elasticApi = require(`${APPROOT}/middleware/elasticsearch.api.js`);
+//const elasticsearch = require(`${APPROOT}/middleware/elasticsearch`);
+const searchEngine = require(`${APPROOT}/middleware/searchEngine`);
+const elasticsearch = new searchEngine("SE");
 const Payload = require(`${APPROOT}/routes/models/payload/payload`);
-//const responseModel = require(`${APPROOT}/routes/models/response`);
 
-const docType  = '_doc';
 const filename = path.basename(__filename);
 
 
@@ -35,8 +35,8 @@ module.exports = {
             }
             console.log(`IndexName [${indexName}] --- Query ::: %j`, payload);
             // 3. Call esService.API()
-            return await elasticApi.search(indexName, payload);
-
+            //return await elasticsearch.singleSearch(indexName, payload);
+            return await elasticsearch.singleSearch(indexName, payload);
         } catch (err) {
             console.log(err);
             throw err;

@@ -13,8 +13,6 @@ const proxyServer = require(`${APPROOT}/routes/index.server.route`);
 const logger = require(`${APPROOT}/util/logger`)(module);
 
 
-
-
 // Setting "routes"
 // const searchRouter = require('./routes/controller/search/post.search');
 

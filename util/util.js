@@ -47,7 +47,8 @@ module.exports.makeResParamByStatErr = function (req, statusCode, err) {
         err.forEach((item) => {
             messageObj.push(item.msg);
         });
-    }우
+    }
+    우
     return {status: statusCode, message: messageObj};
 };
 
@@ -90,38 +91,43 @@ module.exports.reqParam = function (urlname, req, fileName) {
 };
 
 module.exports.setQueryValue = function (setQueryPostion, keyArray, fieldValue) {
-    let   depth = 0;
-    const key = keyArray;
-    const keyLength = key.length - 1;
-    let   dstObj = null;
+    let depth = 0;  // Object 형태로 되어 있는 Query의 depth을 표현
+    const queryKey = keyArray; // Query Fields 순서
+    const depthLength = queryKey.length - 1;
 
-    const checkQueryKey = function (element) {
-        // Queyr의 구조가 모두 객체인 경우에만 정상 실행.
-        if (element.hasOwnProperty(key[depth])) {
-            // key값을 확인한 후에, 해당하는 element의 typeof check가 필요.
-            if (depth == keyLength) {
-                // 마지막 depth인지 확인 후, 찾은 필드에 값 할당
-                dstObj[key[depth]] = fieldValue;
+    const checkQueryKey = (queryObj) => {
+        Object.keys(queryObj).map(key => {
+            // 1. queryObj의 key(Member 이름) 값과 keyArray의 depth번째 필드명과 비교
+            if (key == queryKey[depth]) {
+                // 2. 최종 depth번째인가?
+                if (depth == depthLength) {
+                    queryObj[key] = fieldValue;
+                    // 2-1. 최종 depth번째의 필드에 값을 할당하고 종료.
+                    return true;
+                }
+                // 3. 현재 queryObj의 Type이 Array 일 경우,
+                // - must OR shuold절 내부에 중첩되는 must 또는 should절 case check
+                if (Array.isArray(queryObj[key])) {
+                    // 3-1. depth 증가 후,
+                    depth++;
+                    // 3-2. Array 안에 있는 Query key값 확인.
+                    queryObj[key].forEach(obj => {
+                        checkQueryKey(obj);
+                    });
+                } else {
+                    // 4. 그렇지 않고 Object type일 경우, depth 증가 후, 재귀함수 호출
+                    depth++;
+                    checkQueryKey(queryObj[key])
+                }
+            } else {
+                depth = 0;
             }
-            if (depth < keyLength) {
-                // n번째 depth객체를 dstObj 담고
-                dstObj = element[key[depth]];
-                // depth count up
-                depth++;
-                // 재귀호출을 이용해서 n+1번째 depth객체의 key값을 확인한다.
-                checkQueryKey(dstObj);
-            }
-        }
-        else {
-            // 첫번째 depth는 중복되어 n번째 depth까지 내려가서 확인 했는데,
-            // 최종 depth 멤버의 key가 동일하지 않는 경우가 존재.
-            // Key 값이 일치 하지 않는 경우, depth 초기화
-            depth = 0;
-        }
-    };
+        });
+    }
 
     setQueryPostion.forEach((obj, idx) => {
         checkQueryKey(obj);
+
     });
 
 }

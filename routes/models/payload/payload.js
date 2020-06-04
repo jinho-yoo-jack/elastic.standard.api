@@ -54,6 +54,9 @@ const searchUserGrdInfoQry = (req) => {
     Util.setQueryValue(payload.query.bool.must,["range", "base_date","gte"], gte);
     //payload.query.bool.must[0].range.base_date.gte = gte;
 
+    // Array Test
+    Util.setQueryValue(payload.query.bool.must,["bool", "should","match","user_id"], "JACK");
+
     let dayOfWeekFilter = null;
     if (dayOfWeek > 0) {
         dayOfWeekFilter = {

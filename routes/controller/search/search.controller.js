@@ -48,10 +48,10 @@ module.exports = {
 
         } catch (err) {
             // 4-1. If an error occurs, Send Error Info.
-            //logger.error('---------------------------------------', fileName);
-            //logger.error(`${urlname} / (method:${req.method})`, fileName);
+            logger.error('---------------------------------------', fileName);
+            logger.error(`${req.originalUrl} / (method:${req.method})`, fileName);
             logger.error(err);
-            //logger.error('---------------------------------------', fileName);
+            logger.error('---------------------------------------', fileName);
             res.json(Util.errHandler(req, res, err));
         }
     }
