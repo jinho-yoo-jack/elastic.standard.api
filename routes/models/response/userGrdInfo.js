@@ -5,12 +5,12 @@ const Util = require(`${APPROOT}/util/util`);
 
 const userGrdInfo = (paramSet, searchResult, res) => {
 
-    let cate1 = paramSet.cate1;
-    let cate2 = paramSet.cate2;
-    let cate3 = paramSet.cate3;
-    let cate4 = paramSet.cate4;
-    let cate5 = paramSet.cate5;
-    let level_limit = paramSet.level_limit;
+    let cate1 = paramSet.cate1 || '';
+    let cate2 = paramSet.cate2 || '';
+    let cate3 = paramSet.cate3 || '';
+    let cate4 = paramSet.cate4 || '';
+    let cate5 = paramSet.cate5 || '';
+    let level_limit = paramSet.level_limit || 3;
 
     const responseBody = {};
     const results = [];
@@ -23,7 +23,7 @@ const userGrdInfo = (paramSet, searchResult, res) => {
 
         if ((cate1 + cate2 + cate3 + cate4 + cate5) != "") {
             let cate_cd = '';
-            if (cate5.length > 0) cate_cd = cate5;
+            if (cate5.lengthlength > 0) cate_cd = cate5;
             else if (cate4.length > 0) cate_cd = cate4;
             else if (cate3.length > 0) cate_cd = cate3;
             else if (cate2.length > 0) cate_cd = cate2;

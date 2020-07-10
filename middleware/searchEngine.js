@@ -11,6 +11,8 @@ class searchEngine extends elasticsearch{
     constructor(mode) {
         super(mode);
     }
+
+
 }
 
 module.exports = searchEngine;

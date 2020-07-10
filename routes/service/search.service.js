@@ -1,30 +1,29 @@
 const APPROOT = require('app-root-path');
 const deepcopy = require('deepcopy');
-const moment = require('moment');
 const path = require('path');
-const uuidv4   = require('uuid/v4');
 
-const Util = require(`${APPROOT}/util/util.js`);
-//const elasticsearch = require(`${APPROOT}/middleware/elasticsearch`);
-const searchEngine = require(`${APPROOT}/middleware/searchEngine`);
-const elasticsearch = new searchEngine("SE");
 const Payload = require(`${APPROOT}/routes/models/payload/payload`);
-
-const filename = path.basename(__filename);
-
+const elasticQuery = require(`${APPROOT}/routes/models/payload/payload.model`);
+const searchEngine = require(`${APPROOT}/middleware/elasticsearch`);
+const elasticsearch = new searchEngine("SE");
+const elasticsearch1 = new searchEngine("RE");
 
 
 // Process Execute Query
 module.exports = {
-    searchUserGrdInfo: async (param) => {
+    getUsrGradeBy10: async (req) => {
         let indexName = "ai-user-10grade";
-        try {
-            let request = deepcopy(param);
-            // 1. Make payload
-            const payload = Payload.searchUserGrdInfoQry(request);
 
-            // 2. Select Index
-            if (request.date_range == 0) {
+        try {
+            let reqParams = deepcopy(req);
+            // 1. Set Params return Type {Object}
+            const setParams = Payload.setReqParams4UsrGradeBy10(reqParams);
+
+            // 2. Create Query
+            const searchQuery = elasticQuery.getQryUsrGradeBy10(setParams);
+
+            // 3. Select Index
+            if (reqParams.date_range == 0) {
                 // # Modify #
                 // date_range 입력값이 있을 경우에
                 // 검색 대상 인덱스를 ai-user-grade10(ALIAS)가 아닌
@@ -33,12 +32,12 @@ module.exports = {
             } else {
                 indexName = indexName + "*";
             }
-            console.log(`IndexName [${indexName}] --- Query ::: %j`, payload);
+            console.log(`IndexName [${indexName}] --- Query ::: %j`, searchQuery);
+
             // 3. Call esService.API()
-            //return await elasticsearch.singleSearch(indexName, payload);
-            return await elasticsearch.singleSearch(indexName, payload);
+            return await elasticsearch.singleSearch(indexName, searchQuery);
+
         } catch (err) {
-            console.log(err);
             throw err;
         }
     }
