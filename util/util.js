@@ -100,7 +100,7 @@ module.exports.reqParam = function (urlname, req, fileName) {
 };
 
 /**
- * gateway의 제공하는 Service별 필수 파라미터 체크.
+ * gateway의 제공하는 Service['autocomplete','recommend','popuqery']별 필수 파라미터 체크.
  *
  * @param req
  * @param res
@@ -129,6 +129,12 @@ module.exports.validReq4Service = function (req, res) {
     return isChkSum;
 }
 
+/**
+ * gateway의 Service별 URL 생성
+ *
+ * @param reqParams
+ * @returns {string}
+ */
 module.exports.makeURL4Service = function (reqParams) {
     let resultURL = `http://${config.OPENQUERY_GATEWAY}/service/${reqParams.serviceName}`;
 

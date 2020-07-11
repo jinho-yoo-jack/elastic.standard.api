@@ -21,20 +21,19 @@ module.exports = {
         try {
             // Set Interface Name
             req.paramStatus = 'gateway_service';
-            // 1. Request Parameter Validation Check.
+            // 1. Check serviceName Validate
             const validateResult = Util.validateReqParams(req, res, req.paramStatus, ['serviceName']);
             if (validateResult.status) return res.status(400).send(paramErr.errMsg);
-
+            // 1-1. Check Request Params Validate By serviceName
             const isValid4Service = Util.validReq4Service(req,res);
             if (isValid4Service.status) return res.status(400).send(paramErr.errMsg);
 
             // 2. GET or POST 모든 Request Paramter는 req.query에 담겨져 있다.
 
-            // 3. After Request Elasticsearch Query, Response Result about Query.
+            // 3. Call OpenQuery Gateway API
             const searchResult = await Gateway.getServiceResult(req.query);
 
-            // 4. Call ResponseModel(EsService.Search.Response)
-            // 5. Send Result about Query(payload).
+            // 5. Send Result
             res.json(Util.sendResStatusByOk(req, searchResult));
 
         } catch (err) {
