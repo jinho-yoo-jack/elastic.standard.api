@@ -1,19 +1,51 @@
 {
-  "run_mode" : "dev",
+  "run_mode": "dev",
   "dev": {
-    "DEBUG_LEVEL"           : "debug",
-    "API_SERVICE_PORT"      : "10000",
-    "ELASTICSEARCH_SE_HOST" : ["192.168.13.41:19200","192.168.13.42:19200","192.168.13.43:19200","192.168.13.44:19200"],
-    "ELASTICSEARCH_RE_HOST" : ["localhost:9200"],
-    "ELASTICSEARCH_TIMEOUT" : 100000,
-    "LOG_MODE"              : "error"
+    "DEBUG_LEVEL": "debug",
+    "API_SERVICE_PORT": "10000",
+    "ELASTICSEARCH_SE_HOST": [
+      "192.168.13.41:19200",
+      "192.168.13.42:19200",
+      "192.168.13.43:19200",
+      "192.168.13.44:19200"
+    ],
+    "ELASTICSEARCH_RE_HOST": [
+      "localhost:9200"
+    ],
+    "ELASTICSEARCH_TIMEOUT": 100000,
+    "LOG_MODE": "error",
+    "OPENQUERY_GATEWAY": "localhost:19200"
   },
-  "ops" : {
-    "DEBUG_LEVEL"           : "info",
-    "API_SERVICE_PORT"      : "10000",
-    "ELASTICSEARCH_SE_HOST" : ["192.168.13.41:19200","192.168.13.42:19200","192.168.13.43:19200","192.168.13.44:19200"],
-    "ELASTICSEARCH_RE_HOST" : ["localhost:9200"],
-    "ELASTICSEARCH_TIMEOUT" : 100000,
-    "LOG_MODE"              : "info"
+  "local": {
+    "DEBUG_LEVEL": "info",
+    "API_SERVICE_PORT": "10000",
+    "ELASTICSEARCH_SE_HOST": [
+      "192.168.13.41:19200",
+      "192.168.13.42:19200",
+      "192.168.13.43:19200",
+      "192.168.13.44:19200"
+    ],
+    "ELASTICSEARCH_RE_HOST": [
+      "localhost:9200"
+    ],
+    "ELASTICSEARCH_TIMEOUT": 100000,
+    "LOG_MODE": "info",
+    "OPENQUERY_GATEWAY": "localhost:19200"
+  },
+  "prod": {
+    "DEBUG_LEVEL": "info",
+    "API_SERVICE_PORT": "10000",
+    "ELASTICSEARCH_SE_HOST": [
+      "192.168.13.41:19200",
+      "192.168.13.42:19200",
+      "192.168.13.43:19200",
+      "192.168.13.44:19200"
+    ],
+    "ELASTICSEARCH_RE_HOST": [
+      "localhost:9200"
+    ],
+    "ELASTICSEARCH_TIMEOUT": 100000,
+    "LOG_MODE": "info",
+    "OPENQUERY_GATEWAY": "localhost:19200"
   }
 }

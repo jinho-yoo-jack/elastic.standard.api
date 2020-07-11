@@ -1,8 +1,9 @@
 const APPROOT = require('app-root-path');
-
 const moment = require('moment');
 require('moment-timezone');
 moment.tz.setDefault('Asia/Seoul');
+
+const Util = require(`${APPROOT}/util/util`);
 
 // convert "match" query
 // convert "range" query
@@ -11,17 +12,17 @@ moment.tz.setDefault('Asia/Seoul');
 const setReqParams4UsrGradeBy10 = (req) => {
     // 0. Settings Request Paramter
     const reqParams = {
-        size : req.size,
-        user_id : req.user_id || '',
-        cate1 : req.cate_cd_1 || '',
-        cate2 : req.cate_cd_2 || '',
-        cate3 : req.cate_cd_3 || '',
-        cate4 : req.cate_cd_4 || '',
-        cate5 : req.cate_cd_5 || '',
-        level_limit : req.level_limit || 3,
-        date_range : req.date_range || 0,
-        dayOfWeek : req.dayOfWeek || 0,
-        dayOfMonth : req.dayOfMonth || 0,
+        size: req.size,
+        user_id: req.user_id || '',
+        cate1: req.cate_cd_1 || '',
+        cate2: req.cate_cd_2 || '',
+        cate3: req.cate_cd_3 || '',
+        cate4: req.cate_cd_4 || '',
+        cate5: req.cate_cd_5 || '',
+        level_limit: req.level_limit || 3,
+        date_range: req.date_range || 0,
+        dayOfWeek: req.dayOfWeek || 0,
+        dayOfMonth: req.dayOfMonth || 0,
     }
 
     if (reqParams.date_range > 0) {
@@ -49,7 +50,27 @@ const setReqParams4UsrGradeBy10 = (req) => {
 };
 
 
+const setReqParams4Gateway = (req) => {
+    const result = {};
+    const serviceName = req.serviceName.toLowerCase();
+    result['serviceName'] = serviceName;
+    switch (serviceName) {
+        case 'autocomplete' || 'recommend' :
+            // 자동완성
+            result['keyword'] = req.keyword;
+            result['label'] = req.label;
+            break;
+        case 'popquery' :
+            // 인기 검색어
+            result['label'] = req.label;
+            break;
+    }
+
+    return result;
+}
+
 module.exports = {
-    setReqParams4UsrGradeBy10: setReqParams4UsrGradeBy10
+    setReqParams4UsrGradeBy10: setReqParams4UsrGradeBy10,
+    setReqParams4Gateway: setReqParams4Gateway
 }
 

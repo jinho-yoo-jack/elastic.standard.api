@@ -3,9 +3,7 @@ const APPROOT = require('app-root-path');
 const path = require('path');
 const filename = path.basename(__filename);
 const config = require(`${APPROOT}/config/config`);
-const configfile = require(`${APPROOT}/config/config.json`);
 const crypto = require('crypto');
-const runmode = configfile.runmode;
 const moment = require('moment');
 const logger = require('./logger')(module);
 
@@ -22,7 +20,18 @@ module.exports.sendResStatusByOk = function (req, body, elaspsed) {
         "reason": "OK"
     };
 
-    for (let key in body) ret[key] = body[key];
+    if (Array.isArray(body)) {
+        const result = [];
+        body.map(dataObj => {
+            const data = {};
+            for (let key in dataObj) data[key] = dataObj[key];
+            result.push(data);
+        });
+        ret['result'] = result;
+    } else {
+        for (let key in body) ret[key] = body[key];
+    }
+
     return ret;
 };
 
@@ -77,7 +86,7 @@ module.exports.validateReqParams = function (req, res, fileName, param) {
             errStatus.status = true;
             errStatus.errMsg = erros;
             result.status = 400;
-            return res.status(400).send(this.res_err(req, 400, erros));
+            return res.status(400).send(this.resErr(req, 400, erros));
         }
     });
     return errStatus;
@@ -90,45 +99,52 @@ module.exports.reqParam = function (urlname, req, fileName) {
     logger.info('---------------------------------------', fileName);
 };
 
-module.exports.setQueryValue = function (setQueryPostion, keyArray, fieldValue) {
-    let depth = 0;  // Object 형태로 되어 있는 Query의 depth을 표현
-    const queryKey = keyArray; // Query Fields 순서
-    const depthLength = queryKey.length - 1;
+/**
+ * gateway의 제공하는 Service별 필수 파라미터 체크.
+ *
+ * @param req
+ * @param res
+ * @returns {null}
+ */
+module.exports.validReq4Service = function (req, res) {
+    let isChkSum = null;
+    const autoParam = ['keyword','label'];
+    const popParam = ['label'];
+    const recomParam = ['keyword','label'];
 
-    const checkQueryKey = (queryObj) => {
-        Object.keys(queryObj).map(key => {
-            // 1. queryObj의 key(Member 이름) 값과 keyArray의 depth번째 필드명과 비교
-            if (key == queryKey[depth]) {
-                // 2. 최종 depth번째인가?
-                if (depth == depthLength) {
-                    queryObj[key] = fieldValue;
-                    // 2-1. 최종 depth번째의 필드에 값을 할당하고 종료.
-                    return true;
-                }
-                // 3. 현재 queryObj의 Type이 Array 일 경우,
-                // - must OR shuold절 내부에 중첩되는 must 또는 should절 case check
-                if (Array.isArray(queryObj[key])) {
-                    // 3-1. depth 증가 후,
-                    depth++;
-                    // 3-2. Array 안에 있는 Query key값 확인.
-                    queryObj[key].forEach(obj => {
-                        checkQueryKey(obj);
-                    });
-                } else {
-                    // 4. 그렇지 않고 Object type일 경우, depth 증가 후, 재귀함수 호출
-                    depth++;
-                    checkQueryKey(queryObj[key])
-                }
-            } else {
-                depth = 0;
-            }
-        });
+    switch (req.query.serviceName) {
+        case 'autocomplete' :
+            // 자동완성
+            isChkSum = this.validateReqParams(req, res, req.paramStatus, autoParam);
+            break;
+        case 'popquery' :
+            // 인기 검색어
+            isChkSum = this.validateReqParams(req, res, req.paramStatus, popParam);
+            break;
+        case 'recommend' :
+            // 추천 검색어
+            isChkSum = this.validateReqParams(req, res, req.paramStatus, recomParam);
+            break;
     }
-
-    setQueryPostion.forEach((obj, idx) => {
-        checkQueryKey(obj);
-
-    });
-
+    return isChkSum;
 }
 
+module.exports.makeURL4Service = function (reqParams) {
+    let resultURL = `http://${config.OPENQUERY_GATEWAY}/service/${reqParams.serviceName}`;
+
+    switch (reqParams.serviceName) {
+        case 'autocomplete' :
+            // 자동완성
+            resultURL += `?keyword=${reqParams.keyword}&label=${reqParams.label}`;
+            break;
+        case 'popquery' :
+            // 인기 검색어
+            resultURL += `?label=${reqParams.label}`;
+            break;
+        case 'recommend' :
+            // 추천 검색어
+            resultURL += `?keyword=${reqParams.keyword}&label=${reqParams.label}`;
+            break;
+    }
+    return resultURL;
+}
