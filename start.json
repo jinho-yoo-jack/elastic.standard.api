@@ -5,7 +5,10 @@
       "script": "suggest.js",
       "watch": "/",
       "exec_mode": "cluster",
-      "instance": 1
+      "instance": 1,
+      "out_file": "/dev/null/server.out-2.log",
+      "error_file": "/dev/null"
+
     }
   ]
 }
