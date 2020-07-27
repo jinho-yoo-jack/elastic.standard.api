@@ -46,6 +46,8 @@
     ],
     "ELASTICSEARCH_TIMEOUT": 100000,
     "LOG_MODE": "info",
-    "OPENQUERY_GATEWAY": "localhost:19200"
+    "OPENQUERY_GATEWAY": "localhost:19200",
+    "PM2_LOGROTATE_FORMAT" : "YYYY-MM-DD",
+    "PM2_INSTANCE" : 10
   }
 }

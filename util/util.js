@@ -6,6 +6,7 @@ const config = require(`${APPROOT}/config/config`);
 const crypto = require('crypto');
 const moment = require('moment');
 const logger = require('./logger')(module);
+const fs = require('fs');
 
 /* [SET] response sned OK */
 module.exports.sendResStatusByOk = function (req, body, elaspsed) {
@@ -108,9 +109,9 @@ module.exports.reqParam = function (urlname, req, fileName) {
  */
 module.exports.validReq4Service = function (req, res) {
     let isChkSum = null;
-    const autoParam = ['keyword','label'];
+    const autoParam = ['keyword', 'label'];
     const popParam = ['label'];
-    const recomParam = ['keyword','label'];
+    const recomParam = ['keyword', 'label'];
 
     switch (req.query.serviceName) {
         case 'autocomplete' :
@@ -153,4 +154,20 @@ module.exports.makeURL4Service = function (reqParams) {
             break;
     }
     return resultURL;
+}
+
+/**
+ * PM2가 저장하는 Log Directory 존재 여부 확인 및 생성
+ *
+ * @param path {String} PM2 설정에서 로그파일 위치
+ */
+module.exports.checkFolderExist = function (path) {
+    fs.readdir(path, (error) => {
+        if (error) {
+            console.log('##### Logging Directory not existed!!! ####');
+            console.log('##### Start Make directory /log/solution/... ####');
+            fs.mkdirSync(path);
+        }
+    });
+
 }
