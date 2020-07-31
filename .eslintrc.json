@@ -1,15 +1,28 @@
 {
-    "env": {
-        "browser": true,
-        "commonjs": true,
-        "es2020": true
-    },
-    "extends": [
-        "airbnb-base"
-    ],
-    "parserOptions": {
-        "ecmaVersion": 11
-    },
-    "rules": {
-    }
+  "env": {
+    "browser": true,
+    "commonjs": true,
+    "es2020": true
+  },
+  "extends": [
+    "airbnb-base",
+    "prettier"
+  ],
+  "plugins": [
+    "prettier"
+  ],
+  "parserOptions": {
+    "ecmaVersion": 11
+  },
+  "rules": {
+    "import/no-dynamic-require": "off"  // dynamic-require off
+    ,"array-callback-return" : "off"    // Function not reuturn possible
+    ,"no-useless-catch" : "off"         // At try-catch, catch sentence only throw possible
+    ,"func-names" : "off"               // Anoymous Function possible
+    ,"no-useless-constructor" : "off"   // constructoer
+  },
+  "globals": {
+    // global 변수 naver 설정
+    "naver": "readonly"
+  }
 }

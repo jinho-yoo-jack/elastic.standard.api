@@ -5,7 +5,9 @@ const elasticsearch = require('elasticsearch');
 // Class Elasticsearch
 // Design Pattern by Singleton
 class Elasticsearch {
-    // In ES2019, the ability to define "private" class fields using a hash `#` prefix is added.
+    // In ES2020, the ability to define "private" class fields using a hash `#` prefix is added.
+    // Private class fields is still at Stage 3, while ESLint only supports ECMAScript 2019 at present.
+    // We recommend you to use "babel-eslint" if you want to parse it.
     static #instance;
     static #engineMode;
     /*

@@ -3,6 +3,7 @@
 * @extends elasticsearch.js
 * */
 const elasticsearch = require('./elasticsearch.js');
+
 class searchEngine extends elasticsearch{
     /*
     * Constructor
